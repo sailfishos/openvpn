@@ -1,0 +1,12 @@
+* Tue Aug 30 2011 Carsten Munk <carsten@maemo.org> - 2.2.0
+- Disable checks on ARM, it endlessly tries to connect locally and stalls the build
+  process completely.
+
+* Thu Jun 09 2011 Chris Ferron <chris.e.ferron@linux.intel.com> - 2.2.0
+- updated to v2.2.0 
+- removed all init patches 
+- Due to systemd integration into MeeGo, this package has been updated 
+  to have all its uses of sysv removed as it is no longer supported.
+
+* Wed Jan 19 2011 Yu <yu.a.wang@intel.com>
+- Initial import into MeeGo, FEA#12770

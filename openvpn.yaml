@@ -1,0 +1,41 @@
+Name: openvpn
+Summary: A full-featured SSL VPN solution
+Version: 2.2.0
+Release: 1
+Group: Applications/Internet
+License: GPLv2
+URL: http://openvpn.net/
+Sources:
+    - http://openvpn.net/release/%{name}-%{version}.tar.gz
+    - http://openvpn.net/signatures/%{name}-%{version}.tar.gz.asc
+    - roadwarrior-server.conf
+    - roadwarrior-client.conf
+Description: |
+    OpenVPN is a robust and highly flexible tunneling application that uses all
+    of the encryption, authentication, and certification features of the
+    OpenSSL library to securely tunnel IP networks over a single UDP or TCP
+    port.  It can use the Marcus Franz Xaver Johannes Oberhumer's LZO library
+    for compression.
+
+Requires:
+    - dev >= 0:3.3.2-5
+    - iproute
+    - net-tools
+RequiresPre:
+    - /usr/sbin/useradd
+PkgBR:
+    - lzo-devel
+    - openssl-devel
+    - pam-devel
+    - pkcs11-helper-devel
+    - iproute
+Configure: configure
+ConfigOptions:
+    - --enable-pthread
+    - --enable-password-save
+    - --enable-iproute2
+    - --with-ifconfig-path=/sbin/ifconfig
+    - --with-iproute-path=/sbin/ip
+    - --with-route-path=/sbin/route
+Builder: make
+Check: yes
