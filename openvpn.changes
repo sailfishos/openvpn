@@ -1,3 +1,6 @@
+* Fri May 25 2012 Marko Saukko <sage@merproject.org> - 2.2.2
+- Fixes MER#331: update openvpn to Version 2.2.2 
+
 * Tue Aug 30 2011 Carsten Munk <carsten@maemo.org> - 2.2.0
 - Disable checks on ARM, it endlessly tries to connect locally and stalls the build
   process completely.

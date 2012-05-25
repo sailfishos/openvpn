@@ -1,13 +1,13 @@
 Name: openvpn
 Summary: A full-featured SSL VPN solution
-Version: 2.2.0
+Version: 2.2.2
 Release: 1
 Group: Applications/Internet
 License: GPLv2
 URL: http://openvpn.net/
 Sources:
-    - http://openvpn.net/release/%{name}-%{version}.tar.gz
-    - http://openvpn.net/signatures/%{name}-%{version}.tar.gz.asc
+    - http://swupdate.openvpn.org/community/releases/%{name}-%{version}.tar.xz
+    - http://swupdate.openvpn.org/community/releases/%{name}-%{version}.tar.xz.asc
     - roadwarrior-server.conf
     - roadwarrior-client.conf
 Description: |
@@ -18,16 +18,16 @@ Description: |
     for compression.
 
 Requires:
-    - dev >= 0:3.3.2-5
     - iproute
     - net-tools
 RequiresPre:
     - /usr/sbin/useradd
+PkgConfigBR:
+    - openssl >= 0.9.6
+    - libpkcs11-helper-1
 PkgBR:
     - lzo-devel
-    - openssl-devel
     - pam-devel
-    - pkcs11-helper-devel
     - iproute
 Configure: configure
 ConfigOptions:
