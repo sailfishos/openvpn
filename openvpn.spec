@@ -129,8 +129,8 @@ rm -f %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-client \
 
 %pre
 # >> pre
-getent group openvpn &>/dev/null || groupadd -r openvpn
-getent passwd openvpn &>/dev/null || /usr/sbin/useradd -r -g openvpn -s /sbin/nologin -c OpenVPN -d /etc/openvpn openvpn
+getent group openvpn >/dev/null 2>&1 || groupadd -r openvpn
+getent passwd openvpn >/dev/null 2>&1 || /usr/sbin/useradd -r -g openvpn -s /sbin/nologin -c OpenVPN -d /etc/openvpn openvpn
 # << pre
 
 %files

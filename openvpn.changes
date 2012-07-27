@@ -1,3 +1,6 @@
+* Fri Jul 27 2012 Denis Mingulov <denis@mingulov.com> - 2.2.2
+- Fixes MER#48: openvpn has possible bashisms in it's RPM scriptlets
+
 * Fri May 25 2012 Marko Saukko <sage@merproject.org> - 2.2.2
 - Fixes MER#331: update openvpn to Version 2.2.2 
 
