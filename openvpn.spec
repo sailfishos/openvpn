@@ -101,30 +101,28 @@ mkdir -m 755 -p $RPM_BUILD_ROOT%{_var}/run/%{name}
 # Test Crypto:
 ./openvpn --genkey --secret key
 ./openvpn --test-crypto --secret key
-
-%ifnarch %{arm}
 # Randomize ports for tests to avoid conflicts on the build servers.
-cport=$[ 50000 + ($RANDOM % 15534) ]
-sport=$[ $cport + 1 ]
-sed -e 's/^\(rport\) .*$/\1 '$sport'/' \
--e 's/^\(lport\) .*$/\1 '$cport'/' \
-< sample-config-files/loopback-client \
-> %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-client
-sed -e 's/^\(rport\) .*$/\1 '$cport'/' \
--e 's/^\(lport\) .*$/\1 '$sport'/' \
-< sample-config-files/loopback-server \
-> %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-server
+#cport=$[ 50000 + ($RANDOM % 15534) ]
+#sport=$[ $cport + 1 ]
+#sed -e 's/^\(rport\) .*$/\1 '$sport'/' \
+#-e 's/^\(lport\) .*$/\1 '$cport'/' \
+#< sample-config-files/loopback-client \
+#> %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-client
+#sed -e 's/^\(rport\) .*$/\1 '$cport'/' \
+#-e 's/^\(lport\) .*$/\1 '$sport'/' \
+#< sample-config-files/loopback-server \
+#> %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-server
+#
+## Test SSL/TLS negotiations (runs for 2 minutes):
+#./openvpn --config \
+#%{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-client &
+#./openvpn --config \
+#%{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-server
+#wait
 
-# Test SSL/TLS negotiations (runs for 2 minutes):
-./openvpn --config \
-%{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-client &
-./openvpn --config \
-%{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-server
-wait
-
-rm -f %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-client \
-%{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-server
-%endif
+#rm -f %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-client \
+#%{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-server
+#%endif
 # << check
 
 %pre
