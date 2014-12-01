@@ -1,3 +1,8 @@
+* Mon Dec 01 2014 Pasi Sjöholm <pasi.sjoholm@jollamobile.com> - 2.3.6
+- Upgrade to 2.3.6
+- Fix CVE-2014-8104
+- Re-enable network tests (new certificate, yeah!)
+
 * Thu Nov 27 2014 Carsten Munk <carsten.munk@jolla.com> - 2.2.2
 - Disable network tests, loops.
 
