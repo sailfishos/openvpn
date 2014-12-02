@@ -7,10 +7,11 @@ Name:       openvpn
 
 # >> macros
 %define plugins down-root auth-pam
+%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 # << macros
 
 Summary:    A full-featured SSL VPN solution
-Version:    2.2.2
+Version:    2.3.6
 Release:    1
 Group:      Applications/Internet
 License:    GPLv2
@@ -41,6 +42,12 @@ for compression.
 %prep
 %setup -q -n %{name}-%{version}
 
+sed -i -e 's,%{_datadir}/openvpn/plugin,%{_libdir}/openvpn/plugin,' doc/openvpn.8
+
+# %%doc items shouldn't be executable.
+find contrib sample -type f -perm /100 \
+    -exec chmod a-x {} \;
+
 # >> setup
 # << setup
 
@@ -49,19 +56,17 @@ for compression.
 # << build pre
 
 %configure --disable-static \
-    --enable-pthread \
     --enable-password-save \
     --enable-iproute2 \
-    --with-ifconfig-path=/sbin/ifconfig \
-    --with-iproute-path=/sbin/ip \
-    --with-route-path=/sbin/route
+    --enable-plugins \
+    --enable-plugin-down-root \
+    --enable-plugin-auth-pam \
+    --enable-x509-alt-username \
+    --docdir=%{_pkgdocdir}
 
 make %{?jobs:-j%jobs}
 
 # >> build post
-for plugin in %{plugins} ; do
-%{__make} -C plugin/$plugin
-done
 # << build post
 
 %install
@@ -73,56 +78,50 @@ rm -rf %{buildroot}
 # >> install post
 rm -rf $RPM_BUILD_ROOT
 
-install -D -m 0644 %{name}.8 $RPM_BUILD_ROOT%{_mandir}/man8/%{name}.8
-install -D -m 0755 %{name} $RPM_BUILD_ROOT%{_sbindir}/%{name}
 install -d -m 0755 $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
 
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}
-cp -pR easy-rsa $RPM_BUILD_ROOT%{_datadir}/%{name}/
-rm -rf $RPM_BUILD_ROOT%{_datadir}/%{name}/easy-rsa/Windows
-cp %{SOURCE2} %{SOURCE3} sample-config-files/
+cp %{SOURCE2} %{SOURCE3} sample/sample-config-files/
 
-chmod -x sample-scripts/*
-chmod -x sample-config-files/*
+%{__make} install DESTDIR=$RPM_BUILD_ROOT
+find $RPM_BUILD_ROOT -name '*.la' | xargs rm -f
 
-mkdir -p $RPM_BUILD_ROOT%{_libdir}/%{name}/plugin/lib
-for plugin in %{plugins} ; do
-install -m 0755 plugin/$plugin/openvpn-$plugin.so \
-$RPM_BUILD_ROOT%{_libdir}/%{name}/plugin/lib/openvpn-$plugin.so
-cp plugin/$plugin/README plugin/$plugin.txt
-done
+# Package installs into %%{_pkgdocdir} directly
+# Add further files
+cp -a AUTHORS PORTS INSTALL contrib sample $RPM_BUILD_ROOT%{_pkgdocdir}
 
-mkdir -m 755 -p $RPM_BUILD_ROOT%{_var}/run/%{name}
+mkdir -m 710 -p $RPM_BUILD_ROOT%{_var}/run/%{name}
+
 # << install post
-
 
 %check
 # >> check
 # Test Crypto:
-./openvpn --genkey --secret key
-./openvpn --test-crypto --secret key
+./src/openvpn/openvpn --genkey --secret key
+./src/openvpn/openvpn --test-crypto --secret key
 # Randomize ports for tests to avoid conflicts on the build servers.
-#cport=$[ 50000 + ($RANDOM % 15534) ]
-#sport=$[ $cport + 1 ]
-#sed -e 's/^\(rport\) .*$/\1 '$sport'/' \
-#-e 's/^\(lport\) .*$/\1 '$cport'/' \
-#< sample-config-files/loopback-client \
-#> %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-client
-#sed -e 's/^\(rport\) .*$/\1 '$cport'/' \
-#-e 's/^\(lport\) .*$/\1 '$sport'/' \
-#< sample-config-files/loopback-server \
-#> %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-server
-#
-## Test SSL/TLS negotiations (runs for 2 minutes):
-#./openvpn --config \
-#%{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-client &
-#./openvpn --config \
-#%{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-server
-#wait
+cport=$[ 50000 + ($RANDOM % 15534) ]
+sport=$[ $cport + 1 ]
+sed -e 's/^\(rport\) .*$/\1 '$sport'/' \
+-e 's/^\(lport\) .*$/\1 '$cport'/' \
+< sample/sample-config-files/loopback-client \
+> %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-client
+sed -e 's/^\(rport\) .*$/\1 '$cport'/' \
+-e 's/^\(lport\) .*$/\1 '$sport'/' \
+< sample/sample-config-files/loopback-server \
+> %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-server
 
-#rm -f %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-client \
-#%{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-server
-#%endif
+pushd sample
+# Test SSL/TLS negotiations (runs for 2 minutes):
+../src/openvpn/openvpn --config \
+%{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-client &
+../src/openvpn/openvpn --config \
+%{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-server
+wait
+popd
+
+rm -f %{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-client \
+%{_tmppath}/%{name}-%{version}-%{release}-%(%{__id_u})-loopback-server
 # << check
 
 %pre
@@ -135,13 +134,15 @@ getent passwd openvpn >/dev/null 2>&1 || /usr/sbin/useradd -r -g openvpn -s /sbi
 %defattr(-,root,root,-)
 # >> files
 %defattr(-,root,root,0755)
-%doc AUTHORS COPYING COPYRIGHT.GPL INSTALL PORTS README
-# Add NEWS when it isn't zero-length.
-%doc plugin/*.txt
-%doc contrib  sample-keys sample-scripts sample-config-files
+%{_pkgdocdir}
+%exclude %{_pkgdocdir}/README.IPv6
+%exclude %{_pkgdocdir}/README.polarssl
+%exclude %{_pkgdocdir}/management-notes.txt
+%exclude %{_pkgdocdir}/sample/Makefile*
+%doc contrib sample
 %{_mandir}/man8/%{name}.8*
 %{_sbindir}/%{name}
-%{_datadir}/%{name}/
+%{_includedir}/openvpn-plugin.h
 %{_libdir}/%{name}/
 %{_var}/run/%{name}/
 %config %dir %{_sysconfdir}/%{name}/

@@ -31,11 +31,13 @@ PkgBR:
     - iproute
 Configure: configure
 ConfigOptions:
-    - --enable-pthread
+    - --disable-static
+    - --enable-plugins
+    - --enable-plugin-down-root
+    - --enable-plugin-auth-pam
+    - --enable-x509-alt-username
+    - --docdir=%{_pkgdocdir}
     - --enable-password-save
     - --enable-iproute2
-    - --with-ifconfig-path=/sbin/ifconfig
-    - --with-iproute-path=/sbin/ip
-    - --with-route-path=/sbin/route
 Builder: make
 Check: yes
