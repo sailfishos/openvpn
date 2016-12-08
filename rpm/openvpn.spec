@@ -57,8 +57,6 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' | xargs rm -f
 
-mkdir -m 710 -p $RPM_BUILD_ROOT%{_var}/run/%{name}
-
 %check
 # Test Crypto:
 ./src/openvpn/openvpn --genkey --secret key
@@ -100,7 +98,6 @@ getent passwd openvpn >/dev/null 2>&1 || /usr/sbin/useradd -r -g openvpn -s /sbi
 %{_sbindir}/%{name}
 %{_includedir}/openvpn-plugin.h
 %{_libdir}/%{name}/
-%{_var}/run/%{name}/
 %config %dir %{_sysconfdir}/%{name}/
 %exclude %{_mandir}/man8/%{name}.8*
 
