@@ -3,7 +3,7 @@ Name:       openvpn
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Summary:    A full-featured SSL VPN solution
-Version:    2.3.13
+Version:    2.4.5
 Release:    1
 Group:      Applications/Internet
 License:    GPLv2
@@ -93,10 +93,11 @@ getent passwd openvpn >/dev/null 2>&1 || /usr/sbin/useradd -r -g openvpn -s /sbi
 %defattr(-,root,root,0755)
 %{_pkgdocdir}
 %exclude %{_pkgdocdir}/README.IPv6
-%exclude %{_pkgdocdir}/README.polarssl
+%exclude %{_pkgdocdir}/README.mbedtls
 %exclude %{_pkgdocdir}/management-notes.txt
 %{_sbindir}/%{name}
 %{_includedir}/openvpn-plugin.h
+%{_includedir}/openvpn-msg.h
 %{_libdir}/%{name}/
 %config %dir %{_sysconfdir}/%{name}/
 %exclude %{_mandir}/man8/%{name}.8*
