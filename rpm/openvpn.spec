@@ -15,6 +15,7 @@ Requires(pre): /usr/sbin/useradd
 BuildRequires:  rpm >= 4.11
 BuildRequires:  pkgconfig(openssl) >= 0.9.6
 BuildRequires:  pkgconfig(libpkcs11-helper-1)
+BuildRequires:  pkgconfig(systemd)
 BuildRequires:  lzo-devel
 BuildRequires:  pam-devel
 BuildRequires:  iproute
@@ -50,6 +51,7 @@ autoreconf -vfi
     --enable-plugin-down-root \
     --enable-plugin-auth-pam \
     --enable-x509-alt-username \
+    --enable-systemd \
     --docdir=%{_docdir}/%{name}-%{version}
 
 make %{?_smp_mflags}
@@ -113,6 +115,11 @@ getent passwd openvpn >/dev/null 2>&1 || /usr/sbin/useradd -r -g openvpn -s /sbi
 %{_includedir}/%{name}-msg.h
 %{_libdir}/%{name}/
 %config %dir %{_sysconfdir}/%{name}/
+# We are not presently using the systemd system configuration but want the feature enabled for
+# password prompts
+%exclude %{_libdir}/tmpfiles.d/openvpn.conf
+%exclude %{_libdir}/systemd/system/openvpn-client@.service
+%exclude %{_libdir}/systemd/system/openvpn-server@.service
 
 %files doc
 %defattr(-,root,root,0755)
