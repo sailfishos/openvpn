@@ -9,6 +9,7 @@ Group:      Applications/Internet
 License:    GPLv2
 URL:        http://openvpn.net/
 Source0:    http://swupdate.openvpn.org/community/releases/%{name}-%{version}.tar.xz
+Patch1:     tls-verify-command-disable.diff
 Requires:   iproute
 Requires:   net-tools
 Requires(pre): /usr/sbin/useradd
@@ -27,6 +28,7 @@ for compression.
 
 %prep
 %setup -q -n %{name}-%{version}/openvpn
+%patch1 -p1
 
 %build
 
@@ -101,4 +103,3 @@ getent passwd openvpn >/dev/null 2>&1 || /usr/sbin/useradd -r -g openvpn -s /sbi
 %{_libdir}/%{name}/
 %config %dir %{_sysconfdir}/%{name}/
 %exclude %{_mandir}/man8/%{name}.8*
-
