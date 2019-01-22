@@ -1,7 +1,4 @@
 Name:       openvpn
-
-%{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
-
 Summary:    A full-featured SSL VPN solution
 Version:    2.4.5
 Release:    1
@@ -26,8 +23,16 @@ OpenSSL library to securely tunnel IP networks over a single UDP or TCP
 port.  It can use the Marcus Franz Xaver Johannes Oberhumer's LZO library
 for compression.
 
+%package doc
+Summary:   Documentation for %{name}
+Group:     Documentation
+Requires:  %{name} = %{version}-%{release}
+
+%description doc
+Man page for %{name}.
+
 %prep
-%setup -q -n %{name}-%{version}/openvpn
+%setup -q -n %{name}-%{version}/%{name}
 %patch1 -p1
 
 %build
@@ -41,10 +46,9 @@ autoreconf -vfi
     --enable-plugin-down-root \
     --enable-plugin-auth-pam \
     --enable-x509-alt-username \
-    --docdir=%{_pkgdocdir}
+    --docdir=%{_docdir}/%{name}-%{version}
 
-make %{?jobs:-j%jobs}
-
+make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
@@ -58,6 +62,12 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' | xargs rm -f
+
+rm $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/{COPYING,COPYRIGHT.GPL}
+ln -s ../../licenses/%{name}-%{version}/COPYING \
+   $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/COPYING
+ln -s ../../licenses/%{name}-%{version}/COPYRIGHT.GPL \
+   $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/COPYRIGHT.GPL
 
 %check
 # Test Crypto:
@@ -93,13 +103,17 @@ getent passwd openvpn >/dev/null 2>&1 || /usr/sbin/useradd -r -g openvpn -s /sbi
 
 %files
 %defattr(-,root,root,0755)
-%{_pkgdocdir}
-%exclude %{_pkgdocdir}/README.IPv6
-%exclude %{_pkgdocdir}/README.mbedtls
-%exclude %{_pkgdocdir}/management-notes.txt
+%license COPYING COPYRIGHT.GPL
 %{_sbindir}/%{name}
-%{_includedir}/openvpn-plugin.h
-%{_includedir}/openvpn-msg.h
+%{_includedir}/%{name}-plugin.h
+%{_includedir}/%{name}-msg.h
 %{_libdir}/%{name}/
 %config %dir %{_sysconfdir}/%{name}/
-%exclude %{_mandir}/man8/%{name}.8*
+
+%files doc
+%defattr(-,root,root,0755)
+%{_mandir}/man8/%{name}.*
+%{_docdir}/%{name}-%{version}
+%exclude %{_docdir}/%{name}-%{version}/README.IPv6
+%exclude %{_docdir}/%{name}-%{version}/README.mbedtls
+%exclude %{_docdir}/%{name}-%{version}/management-notes.txt
