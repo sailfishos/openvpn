@@ -10,6 +10,9 @@ Patch1:     tls-verify-command-disable.diff
 Requires:   iproute
 Requires:   net-tools
 Requires(pre): /usr/sbin/useradd
+
+# %license requires reasonably fresh rpm
+BuildRequires:  rpm >= 4.11
 BuildRequires:  pkgconfig(openssl) >= 0.9.6
 BuildRequires:  pkgconfig(libpkcs11-helper-1)
 BuildRequires:  lzo-devel
