@@ -15,6 +15,7 @@ BuildRequires:  pkgconfig(libpkcs11-helper-1)
 BuildRequires:  lzo-devel
 BuildRequires:  pam-devel
 BuildRequires:  iproute
+BuildRequires:  libtool
 
 %description
 OpenVPN is a robust and highly flexible tunneling application that uses all
