@@ -7,6 +7,7 @@ License:    GPLv2
 URL:        http://openvpn.net/
 Source0:    http://swupdate.openvpn.org/community/releases/%{name}-%{version}.tar.xz
 Patch1:     tls-verify-command-disable.diff
+Patch2:     privatekey-passphrase-handling.diff
 Requires:   iproute
 Requires:   net-tools
 Requires(pre): /usr/sbin/useradd
@@ -39,6 +40,7 @@ Man page for %{name}.
 %prep
 %setup -q -n %{name}-%{version}/%{name}
 %patch1 -p1
+%patch2 -p1
 
 %build
 
