@@ -2,7 +2,6 @@ Name:       openvpn
 Summary:    A full-featured SSL VPN solution
 Version:    2.4.5
 Release:    1
-Group:      Applications/Internet
 License:    GPLv2
 URL:        http://openvpn.net/
 Source0:    http://swupdate.openvpn.org/community/releases/%{name}-%{version}.tar.xz
@@ -31,11 +30,17 @@ for compression.
 
 %package doc
 Summary:   Documentation for %{name}
-Group:     Documentation
 Requires:  %{name} = %{version}-%{release}
 
 %description doc
 Man page for %{name}.
+
+%package devel
+Summary:   Development headers for %{name}
+Requires:  %{name} = %{version}-%{release}
+
+%description devel
+%{summary}.
 
 %prep
 %setup -q -n %{name}-%{version}/%{name}
@@ -113,8 +118,6 @@ getent passwd openvpn >/dev/null 2>&1 || /usr/sbin/useradd -r -g openvpn -s /sbi
 %defattr(-,root,root,0755)
 %license COPYING COPYRIGHT.GPL
 %{_sbindir}/%{name}
-%{_includedir}/%{name}-plugin.h
-%{_includedir}/%{name}-msg.h
 %{_libdir}/%{name}/
 %config %dir %{_sysconfdir}/%{name}/
 # We are not presently using the systemd system configuration but want the feature enabled for
@@ -130,3 +133,7 @@ getent passwd openvpn >/dev/null 2>&1 || /usr/sbin/useradd -r -g openvpn -s /sbi
 %exclude %{_docdir}/%{name}-%{version}/README.IPv6
 %exclude %{_docdir}/%{name}-%{version}/README.mbedtls
 %exclude %{_docdir}/%{name}-%{version}/management-notes.txt
+
+%files devel
+%{_includedir}/openvpn-plugin.h
+%{_includedir}/openvpn-msg.h
