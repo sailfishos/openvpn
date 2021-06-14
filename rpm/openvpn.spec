@@ -1,12 +1,11 @@
 Name:       openvpn
 Summary:    A full-featured SSL VPN solution
-Version:    2.4.5
+Version:    2.5.2
 Release:    1
 License:    GPLv2
 URL:        http://openvpn.net/
 Source0:    http://swupdate.openvpn.org/community/releases/%{name}-%{version}.tar.xz
 Patch1:     tls-verify-command-disable.diff
-Patch2:     privatekey-passphrase-handling.diff
 Requires:   iproute
 Requires:   net-tools
 Requires(pre): /usr/sbin/useradd
@@ -20,6 +19,7 @@ BuildRequires:  lzo-devel
 BuildRequires:  pam-devel
 BuildRequires:  iproute
 BuildRequires:  libtool
+BuildRequires:  python3-docutils
 
 %description
 OpenVPN is a robust and highly flexible tunneling application that uses all
@@ -45,7 +45,6 @@ Requires:  %{name} = %{version}-%{release}
 %prep
 %setup -q -n %{name}-%{version}/%{name}
 %patch1 -p1
-%patch2 -p1
 
 %build
 

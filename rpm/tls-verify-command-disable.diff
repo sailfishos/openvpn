@@ -1,12 +1,11 @@
 diff --git a/src/openvpn/ssl_verify.c b/src/openvpn/ssl_verify.c
-index c7e595e4..4dc3d7a8 100644
+index 55e7fedc..8a9eb1bd 100644
 --- a/src/openvpn/ssl_verify.c
 +++ b/src/openvpn/ssl_verify.c
-@@ -572,62 +572,6 @@ verify_cert_export_cert(openvpn_x509_cert_t *peercert, const char *tmp_dir, stru
-     return peercert_filename;
+@@ -540,61 +540,6 @@ verify_cert_export_cert(openvpn_x509_cert_t *peercert, const char *tmp_dir, stru
  }
  
--
+ 
 -/*
 - * run --tls-verify script
 - */
@@ -48,7 +47,7 @@ index c7e595e4..4dc3d7a8 100644
 -
 -cleanup:
 -    gc_free(&gc);
--    argv_reset(&argv);
+-    argv_free(&argv);
 -
 -    if (ret)
 -    {
@@ -65,7 +64,7 @@ index c7e595e4..4dc3d7a8 100644
  /*
   * check peer cert against CRL directory
   */
-@@ -779,11 +723,10 @@ verify_cert(struct tls_session *session, openvpn_x509_cert_t *cert, int cert_dep
+@@ -754,11 +699,10 @@ verify_cert(struct tls_session *session, openvpn_x509_cert_t *cert, int cert_dep
          goto cleanup;
      }
  
