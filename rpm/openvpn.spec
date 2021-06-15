@@ -6,6 +6,7 @@ License:    GPLv2
 URL:        http://openvpn.net/
 Source0:    http://swupdate.openvpn.org/community/releases/%{name}-%{version}.tar.xz
 Patch1:     tls-verify-command-disable.diff
+Patch2:     drop-doc-from-makefile-am.diff
 Requires:   iproute
 Requires:   net-tools
 Requires(pre): /usr/sbin/useradd
@@ -19,7 +20,6 @@ BuildRequires:  lzo-devel
 BuildRequires:  pam-devel
 BuildRequires:  iproute
 BuildRequires:  libtool
-BuildRequires:  python3-docutils
 
 %description
 OpenVPN is a robust and highly flexible tunneling application that uses all
@@ -45,6 +45,7 @@ Requires:  %{name} = %{version}-%{release}
 %prep
 %setup -q -n %{name}-%{version}/%{name}
 %patch1 -p1
+%patch2 -p1
 
 %build
 
@@ -124,14 +125,9 @@ getent passwd openvpn >/dev/null 2>&1 || /usr/sbin/useradd -r -g openvpn -s /sbi
 %exclude %{_libdir}/tmpfiles.d/openvpn.conf
 %exclude %{_libdir}/systemd/system/openvpn-client@.service
 %exclude %{_libdir}/systemd/system/openvpn-server@.service
+%exclude %{_mandir}/man8/%{name}.*
+%exclude %{_docdir}/%{name}-%{version}/*
 
-%files doc
-%defattr(-,root,root,0755)
-%{_mandir}/man8/%{name}.*
-%{_docdir}/%{name}-%{version}
-%exclude %{_docdir}/%{name}-%{version}/README.IPv6
-%exclude %{_docdir}/%{name}-%{version}/README.mbedtls
-%exclude %{_docdir}/%{name}-%{version}/management-notes.txt
 
 %files devel
 %{_includedir}/openvpn-plugin.h

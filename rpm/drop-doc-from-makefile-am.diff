@@ -1,0 +1,13 @@
+diff --git a/Makefile.am b/Makefile.am
+index d1c10fc5..39069e9d 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -50,7 +50,7 @@ BUILT_SOURCES = \
+ 	config-version.h
+ endif
+ 
+-SUBDIRS = build distro include src sample doc tests
++SUBDIRS = build distro include src sample tests
+ 
+ dist_doc_DATA = \
+ 	README \
