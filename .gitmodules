@@ -1,3 +1,3 @@
 [submodule "openvpn"]
 	path = openvpn
-	url = https://git.merproject.org/mirror/openvpn.git
+	url = https://github.com/sailfishos-mirror/openvpn.git
