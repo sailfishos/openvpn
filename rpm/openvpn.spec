@@ -1,6 +1,6 @@
 Name:       openvpn
 Summary:    A full-featured SSL VPN solution
-Version:    2.5.2
+Version:    2.5.5
 Release:    1
 License:    GPLv2
 URL:        http://openvpn.net/
@@ -11,8 +11,6 @@ Requires:   iproute
 Requires:   net-tools
 Requires(pre): /usr/sbin/useradd
 
-# %license requires reasonably fresh rpm
-BuildRequires:  rpm >= 4.11
 BuildRequires:  pkgconfig(openssl) >= 0.9.6
 BuildRequires:  pkgconfig(libpkcs11-helper-1)
 BuildRequires:  pkgconfig(systemd)
