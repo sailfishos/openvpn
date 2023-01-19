@@ -1,10 +1,10 @@
 Name:       openvpn
 Summary:    A full-featured SSL VPN solution
-Version:    2.5.5
+Version:    2.5.8
 Release:    1
 License:    GPLv2
 URL:        http://openvpn.net/
-Source0:    http://swupdate.openvpn.org/community/releases/%{name}-%{version}.tar.xz
+Source0:    %{name}-%{version}.tar.xz
 Patch1:     tls-verify-command-disable.diff
 Patch2:     drop-doc-from-makefile-am.diff
 Requires:   iproute
@@ -26,13 +26,6 @@ OpenSSL library to securely tunnel IP networks over a single UDP or TCP
 port.  It can use the Marcus Franz Xaver Johannes Oberhumer's LZO library
 for compression.
 
-%package doc
-Summary:   Documentation for %{name}
-Requires:  %{name} = %{version}-%{release}
-
-%description doc
-Man page for %{name}.
-
 %package devel
 Summary:   Development headers for %{name}
 Requires:  %{name} = %{version}-%{release}
@@ -41,9 +34,7 @@ Requires:  %{name} = %{version}-%{release}
 %{summary}.
 
 %prep
-%setup -q -n %{name}-%{version}/%{name}
-%patch1 -p1
-%patch2 -p1
+%autosetup -p1 -n %{name}-%{version}/%{name}
 
 %build
 
@@ -59,26 +50,14 @@ autoreconf -vfi
     --enable-systemd \
     --docdir=%{_docdir}/%{name}-%{version}
 
-make %{?_smp_mflags}
+%make_build
 
 %install
-rm -rf %{buildroot}
 %make_install
-
-rm -rf $RPM_BUILD_ROOT
 
 install -d -m 0755 $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
 
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}
-
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' | xargs rm -f
-
-rm $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/{COPYING,COPYRIGHT.GPL}
-ln -s ../../licenses/%{name}-%{version}/COPYING \
-   $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/COPYING
-ln -s ../../licenses/%{name}-%{version}/COPYRIGHT.GPL \
-   $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}/COPYRIGHT.GPL
 
 %check
 # Test Crypto:
@@ -123,9 +102,7 @@ getent passwd openvpn >/dev/null 2>&1 || /usr/sbin/useradd -r -g openvpn -s /sbi
 %exclude %{_libdir}/tmpfiles.d/openvpn.conf
 %exclude %{_libdir}/systemd/system/openvpn-client@.service
 %exclude %{_libdir}/systemd/system/openvpn-server@.service
-%exclude %{_mandir}/man8/%{name}.*
 %exclude %{_docdir}/%{name}-%{version}/*
-
 
 %files devel
 %{_includedir}/openvpn-plugin.h
