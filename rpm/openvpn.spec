@@ -1,6 +1,6 @@
 Name:       openvpn
 Summary:    A full-featured SSL VPN solution
-Version:    2.5.8
+Version:    2.6.9
 Release:    1
 License:    GPLv2
 URL:        http://openvpn.net/
@@ -11,10 +11,12 @@ Requires:   iproute
 Requires:   net-tools
 Requires(pre): /usr/sbin/useradd
 
-BuildRequires:  pkgconfig(openssl) >= 0.9.6
+BuildRequires:  pkgconfig(openssl)
+BuildRequires:  pkgconfig(libcap-ng)
+BuildRequires:  pkgconfig(liblz4)
 BuildRequires:  pkgconfig(libpkcs11-helper-1)
 BuildRequires:  pkgconfig(systemd)
-BuildRequires:  lzo-devel
+BuildRequires:  pkgconfig(lzo2)
 BuildRequires:  pam-devel
 BuildRequires:  iproute
 BuildRequires:  libtool
@@ -62,7 +64,10 @@ find $RPM_BUILD_ROOT -name '*.la' | xargs rm -f
 %check
 # Test Crypto:
 ./src/openvpn/openvpn --genkey --secret key
-./src/openvpn/openvpn --test-crypto --secret key
+./src/openvpn/openvpn --cipher aes-128-cbc --test-crypto --secret key
+./src/openvpn/openvpn --cipher aes-256-cbc --test-crypto --secret key
+./src/openvpn/openvpn --cipher aes-128-gcm --test-crypto --secret key
+./src/openvpn/openvpn --cipher aes-256-gcm --test-crypto --secret key
 # Randomize ports for tests to avoid conflicts on the build servers.
 cport=$[ 50000 + ($RANDOM % 15534) ]
 sport=$[ $cport + 1 ]
