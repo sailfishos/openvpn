@@ -1,5 +1,5 @@
 diff --git a/src/openvpn/ssl_verify.c b/src/openvpn/ssl_verify.c
-index 75a4b2ec..5c511905 100644
+index 930769b7..9287af71 100644
 --- a/src/openvpn/ssl_verify.c
 +++ b/src/openvpn/ssl_verify.c
 @@ -515,40 +515,6 @@ verify_cert_call_plugin(const struct plugin_list *plugins, struct env_set *es,
