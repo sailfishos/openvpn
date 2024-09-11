@@ -1,6 +1,6 @@
 Name:       openvpn
 Summary:    A full-featured SSL VPN solution
-Version:    2.6.9
+Version:    2.6.12
 Release:    1
 License:    GPLv2
 URL:        http://openvpn.net/
@@ -97,7 +97,6 @@ getent group openvpn >/dev/null 2>&1 || groupadd -r openvpn || :
 getent passwd openvpn >/dev/null 2>&1 || /usr/sbin/useradd -r -g openvpn -s /sbin/nologin -c OpenVPN -d /etc/openvpn openvpn || :
 
 %files
-%defattr(-,root,root,0755)
 %license COPYING COPYRIGHT.GPL
 %{_sbindir}/%{name}
 %{_libdir}/%{name}/
