@@ -1,9 +1,9 @@
 Name:       openvpn
 Summary:    A full-featured SSL VPN solution
-Version:    2.6.12
+Version:    2.6.15
 Release:    1
 License:    GPLv2
-URL:        http://openvpn.net/
+URL:        https://github.com/sailfishos/openvpn
 Source0:    %{name}-%{version}.tar.xz
 Patch1:     tls-verify-command-disable.diff
 Patch2:     drop-doc-from-makefile-am.diff
