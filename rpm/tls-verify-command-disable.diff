@@ -1,8 +1,8 @@
 diff --git a/src/openvpn/ssl_verify.c b/src/openvpn/ssl_verify.c
-index 930769b7..9287af71 100644
+index 4c99b8e3..a715dcc5 100644
 --- a/src/openvpn/ssl_verify.c
 +++ b/src/openvpn/ssl_verify.c
-@@ -515,40 +515,6 @@ verify_cert_call_plugin(const struct plugin_list *plugins, struct env_set *es,
+@@ -507,38 +507,6 @@ verify_cert_call_plugin(const struct plugin_list *plugins, struct env_set *es, i
      return SUCCESS;
  }
  
@@ -10,8 +10,8 @@ index 930769b7..9287af71 100644
 - * run --tls-verify script
 - */
 -static result_t
--verify_cert_call_command(const char *verify_command, struct env_set *es,
--                         int cert_depth, openvpn_x509_cert_t *cert, char *subject)
+-verify_cert_call_command(const char *verify_command, struct env_set *es, int cert_depth,
+-                         char *subject)
 -{
 -    int ret;
 -    struct gc_arena gc = gc_new();
@@ -30,26 +30,24 @@ index 930769b7..9287af71 100644
 -
 -    if (ret)
 -    {
--        msg(D_HANDSHAKE, "VERIFY SCRIPT OK: depth=%d, %s",
--            cert_depth, subject);
+-        msg(D_HANDSHAKE, "VERIFY SCRIPT OK: depth=%d, %s", cert_depth, subject);
 -        return SUCCESS;
 -    }
 -
--    msg(D_HANDSHAKE, "VERIFY SCRIPT ERROR: depth=%d, %s",
--        cert_depth, subject);
--    return FAILURE;             /* Reject connection */
+-    msg(D_HANDSHAKE, "VERIFY SCRIPT ERROR: depth=%d, %s", cert_depth, subject);
+-    return FAILURE; /* Reject connection */
 -}
 -
  /*
   * check peer cert against CRL directory
   */
-@@ -764,11 +730,10 @@ verify_cert(struct tls_session *session, openvpn_x509_cert_t *cert, int cert_dep
+@@ -761,11 +729,10 @@ verify_cert(struct tls_session *session, openvpn_x509_cert_t *cert, int cert_dep
          goto cleanup;
      }
  
 -    /* run --tls-verify script */
--    if (opt->verify_command && SUCCESS != verify_cert_call_command(opt->verify_command,
--                                                                   opt->es, cert_depth, cert, subject))
+-    if (opt->verify_command
+-        && SUCCESS != verify_cert_call_command(opt->verify_command, opt->es, cert_depth, subject))
 +    /* --tls-verify command disabled because of possible vulnerability */
 +    if (opt->verify_command)
      {

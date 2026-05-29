@@ -1,6 +1,6 @@
 Name:       openvpn
 Summary:    A full-featured SSL VPN solution
-Version:    2.6.15
+Version:    2.7.4
 Release:    1
 License:    GPLv2
 URL:        https://github.com/sailfishos/openvpn
@@ -107,6 +107,8 @@ getent passwd openvpn >/dev/null 2>&1 || /usr/sbin/useradd -r -g openvpn -s /sbi
 %exclude %{_libdir}/systemd/system/openvpn-client@.service
 %exclude %{_libdir}/systemd/system/openvpn-server@.service
 %exclude %{_docdir}/%{name}-%{version}/*
+# DNS is handled by ConnMan, no need to have this binary.
+%exclude %{_libexecdir}/openvpn/dns-updown
 
 %files devel
 %{_includedir}/openvpn-plugin.h
