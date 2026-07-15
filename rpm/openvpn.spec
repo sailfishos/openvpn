@@ -1,6 +1,6 @@
 Name:       openvpn
 Summary:    A full-featured SSL VPN solution
-Version:    2.7.4
+Version:    2.7.5
 Release:    1
 License:    GPLv2
 URL:        https://github.com/sailfishos/openvpn
